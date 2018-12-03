@@ -2,6 +2,8 @@ package com.dodola.watchdogkiller;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,20 +20,30 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 WatchDogKiller.stopWatchDog();
+                // 触发生效
+                Runtime.getRuntime().gc();
+                System.runFinalization();
                 resetWatchDogStatus();
             }
         });
         findViewById(R.id.fire_timeout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new Runnable() {
+                // 因为 stopWatchDog需要下一次循环才会生效，这里先post一下
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        fireTimeout();
-                        Runtime.getRuntime().gc();
-                        System.runFinalization();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                fireTimeout();
+                                Runtime.getRuntime().gc();
+                                System.runFinalization();
+                            }
+                        }).start();
                     }
-                }).start();
+                }, 100);
+
                 Toast.makeText(MainActivity.this, "请等待。。。。", Toast.LENGTH_SHORT).show();
             }
         });

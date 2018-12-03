@@ -40,3 +40,17 @@ I/Process: Sending signal. PID: 4363 SIG: 9
 ```
 3. 点击`Kill WatchDog` 按钮可以关闭 Timeout watchdog，然后点击`触发 TimeOut` 按钮观察情况，正常情况下不会产生 crash
 
+疑问点
+===
+如果直接调用Daemons$FinalizerWatchdogDaemon的stop方法，在Android 6.0之前的版本可能会有问题。
+```
+final Class clazz = Class.forName("java.lang.Daemons$FinalizerWatchdogDaemon");
+final Field field = clazz.getDeclaredField("INSTANCE");
+field.setAccessible(true);
+final Object watchdog = field.get(null);
+final Method method = clazz.getSuperclass().getDeclaredMethod("stop");
+method.setAccessible(true);
+method.invoke(watchdog);
+```
+
+这是为什么，你能告诉我们吗？
