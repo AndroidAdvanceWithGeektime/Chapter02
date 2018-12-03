@@ -39,7 +39,7 @@ public class WatchDogKiller {
         //}
 
         // Android P 以后不能反射FinalizerWatchdogDaemon
-        if (Build.VERSION.SDK_INT > 26) {
+        if (Build.VERSION.SDK_INT >= 28) {
             Log.w(TAG, "stopWatchDog, do not support after Android P, just return");
             return;
         }
