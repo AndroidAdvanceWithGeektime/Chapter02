@@ -33,8 +33,8 @@ public class WatchDogKiller {
 
 
     public static void stopWatchDog() {
-        // 建议在在debug包或者灰度包中关闭，保留发现问题的能力。为了Sample效果，先注释
-        //if (BuildConfig.DEBUG) {
+        // 建议在在debug包或者灰度包中不要stop，保留发现问题的能力。为了Sample效果，先注释
+        //if (!BuildConfig.DEBUG) {
         //    return;
         //}
 
